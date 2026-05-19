@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: first-ever
+spec:
+  containers:
+    - name: first
+      image: busybox:1.28
+      command: ['echo', "yoyoyo c la premiere fois"]
+...

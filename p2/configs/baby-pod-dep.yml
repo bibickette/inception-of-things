@@ -1,0 +1,19 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: first-ever
+  namespace: demo-iot
+spec:
+  selector:
+    matchLabels:
+      app: first-ever
+  template:
+    metadata:
+      labels:
+        app: first-ever
+    spec:
+      containers:
+        - name: first
+          image: bashofmann/rancher-demo:1.0.0
+...
