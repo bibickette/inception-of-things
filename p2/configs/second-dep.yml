@@ -17,4 +17,7 @@ spec:
       containers:
         - name: second
           image: bashofmann/rancher-demo:1.0.0
+          env:
+          - name: COW_COLOR
+            value: purple
 ...

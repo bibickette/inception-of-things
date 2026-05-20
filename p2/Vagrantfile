@@ -13,6 +13,7 @@ Vagrant.configure("2") do |config|
         control.vm.provision "file", source: "./configs/baby-pod-dep.yml", destination: "/home/vagrant/baby-pod-dep.yml"
         control.vm.provision "file", source: "./configs/second-dep.yml", destination: "/home/vagrant/second-dep.yml"
         control.vm.provision "shell", path: "script/server.sh"
+        control.vm.provision "shell", path: "script/setup.sh"
 
     end
 
