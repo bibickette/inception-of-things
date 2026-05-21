@@ -2,34 +2,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: three-ever
+  name: app2
   namespace: demo-iot
 spec:
+  replicas: 3
   selector:
     matchLabels:
-      app: three-ever
+      app: app2
   template:
     metadata:
       labels:
-        app: three-ever
+        app: app2
     spec:
       containers:
-        - name: three
+        - name: second
           image: bashofmann/rancher-demo:1.0.0
           env:
           - name: COW_COLOR
-            value: red
+            value: purple
         
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: three-ever-service
+  name: app2-service
   namespace: demo-iot
 spec:
   selector:
-    app: three-ever
+    app: app2
   ports:
   - protocol: TCP
-    port: 7070
+    port: 4242
     targetPort: 8080

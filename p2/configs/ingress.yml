@@ -13,7 +13,7 @@ spec:
             path: /
             backend:
               service:
-                name: first-ever-service
+                name: app1-service
                 port:
                   number: 8080
     - host: app2.com
@@ -23,7 +23,7 @@ spec:
             path: /
             backend:
               service:
-                name: second-ever-service
+                name: app2-service
                 port:
                   number: 4242
     - http:
@@ -32,7 +32,7 @@ spec:
             path: /
             backend:
               service:
-                name: three-ever-service
+                name: app3-service
                 port:
                   number: 7070
     

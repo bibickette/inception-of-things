@@ -1,8 +1,8 @@
 Vagrant.configure("2") do |config|
     config.vm.box = "debian/trixie64"
 
-    config.vm.define "pouetS", primary: true  do |control| 
-        control.vm.hostname = "pouetS"
+    config.vm.define "jbrousseS", primary: true  do |control| 
+        control.vm.hostname = "jbrousseS"
         control.vm.network "private_network", ip: "192.168.56.110"
         control.vm.provider "libvirt" do |libvirt|
             libvirt.memory = 1024
@@ -11,8 +11,8 @@ Vagrant.configure("2") do |config|
         control.vm.provision "shell", path: "script/server.sh"
     end
 
-    config.vm.define "pouetSW", primary: false do |control| 
-        control.vm.hostname = "pouetSW"
+    config.vm.define "jbrousseSW", primary: false do |control| 
+        control.vm.hostname = "jbrousseSW"
         control.vm.network "private_network", ip: "192.168.56.111"
         control.vm.provider "libvirt" do |libvirt|
             libvirt.memory = 512

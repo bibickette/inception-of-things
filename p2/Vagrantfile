@@ -2,17 +2,16 @@ Vagrant.configure("2") do |config|
     config.vm.box = "debian/trixie64"
 
 
-    config.vm.define "pouetS" do |control| 
-        control.vm.hostname = "pouetS"
+    config.vm.define "jbrousseS" do |control| 
+        control.vm.hostname = "jbrousseS"
         control.vm.network "private_network", ip: "192.168.56.110"
         control.vm.provider "libvirt" do |libvirt|
             libvirt.memory = 1024
             libvirt.cpus = 1
         end
-        control.vm.provision "file", source: "./configs/baby-pod.yml", destination: "/home/vagrant/baby-pod.yml"
-        control.vm.provision "file", source: "./configs/baby-pod-dep.yml", destination: "/home/vagrant/baby-pod-dep.yml"
-        control.vm.provision "file", source: "./configs/second-dep.yml", destination: "/home/vagrant/second-dep.yml"
-        control.vm.provision "file", source: "./configs/three-dep.yml", destination: "/home/vagrant/three-dep.yml"
+        control.vm.provision "file", source: "./configs/app1.yml", destination: "/home/vagrant/app1.yml"
+        control.vm.provision "file", source: "./configs/app2.yml", destination: "/home/vagrant/app2.yml"
+        control.vm.provision "file", source: "./configs/app3.yml", destination: "/home/vagrant/app3.yml"
         control.vm.provision "file", source: "./configs/ingress.yml", destination: "/home/vagrant/ingress.yml"
         control.vm.provision "shell", path: "script/server.sh"
         control.vm.provision "shell", path: "script/setup.sh"
