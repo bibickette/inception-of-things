@@ -1,7 +1,6 @@
 #!/bin/sh
 k3d cluster delete test
-
-k3d cluster create test   --port '8888:80@loadbalancer' -p 443:443 -p 80:30010
+k3d cluster create test --port '8888:80@loadbalancer' --port 8080:443
 
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
