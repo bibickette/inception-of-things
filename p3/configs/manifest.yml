@@ -2,20 +2,20 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: test
-  namespace: argocd
 spec:
   destination:
-    name: ''
     namespace: iot-argo
-    server: 'https://kubernetes.default.svc'
+    server: https://kubernetes.default.svc
   source:
     path: .
-    repoURL: 'https://github.com/bibickette/inception-of-things-gcaptari'
+    repoURL: https://github.com/bibickette/inception-of-things-gcaptari
     targetRevision: HEAD
+  sources: []
   project: default
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+      enabled: true
     syncOptions:
       - CreateNamespace=true
