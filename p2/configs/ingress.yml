@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: demo-iot-ingress
-  namespace: demo-iot
+  name: app-iot-ingress
+  namespace: app-iot
 spec:
   ingressClassName: traefik
   rules:

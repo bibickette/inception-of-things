@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: app1
-  namespace: demo-iot
+  namespace: app-iot
 spec:
   selector:
     matchLabels:
@@ -21,7 +21,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: app1-service
-  namespace: demo-iot
+  namespace: app-iot
 spec:
   selector:
     app: app1

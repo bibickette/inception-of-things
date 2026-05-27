@@ -13,8 +13,8 @@ Vagrant.configure("2") do |config|
         control.vm.provision "file", source: "./configs/app2.yml", destination: "/home/vagrant/app2.yml"
         control.vm.provision "file", source: "./configs/app3.yml", destination: "/home/vagrant/app3.yml"
         control.vm.provision "file", source: "./configs/ingress.yml", destination: "/home/vagrant/ingress.yml"
-        control.vm.provision "shell", path: "script/server.sh"
-        control.vm.provision "shell", path: "script/setup.sh"
+        control.vm.provision "shell", path: "scripts/server.sh"
+        control.vm.provision "shell", path: "scripts/setup.sh"
 
     end
 
