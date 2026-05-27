@@ -1,5 +1,9 @@
 #!/bin/sh
 
+
+if [ -f /vagrant/.secret/token ]; do
+  rm -rf /vagrant/.secret/token
+done
 apt update 
 apt install curl -y
 
