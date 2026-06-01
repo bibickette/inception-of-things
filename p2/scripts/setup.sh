@@ -3,7 +3,6 @@
 echo "======== DELETING NAMESPACE IF EXISTS ========"
 kubectl delete namespace app-iot
 
-
 kubectl create namespace app-iot
 
 kubectl apply -f app1.yml
