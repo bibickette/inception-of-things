@@ -1,7 +1,7 @@
 # Project presentation - `inception-of-things`
 **Introduction**
 
-*This project was realized in a **trio with [Luma](https://github.com/luma-3) and [Sensei Tarzan](https://github.com/SenseiTarzan)***
+*This project was realized in a **trio with [Luma](https://github.com/luma-3) and [Sensei Tarzan](https://github.com/SenseiTarzan)***  
 *It also uses this [Git repository](https://github.com/bibickette/inception-of-things-gcaptari)*
 
 This README is organized as follows:
