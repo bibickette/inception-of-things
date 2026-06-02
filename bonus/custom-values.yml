@@ -1,0 +1,52 @@
+global:
+  hosts:
+    domain: localhost
+    # https: false
+  edition: ce
+  redis:
+    host: redis-master
+    # auth:
+    #   secret: psql-password
+    #   key: password
+  psql:
+    host: postgresql
+    password:
+      secret: psql-password
+      key: password
+  appConfig:
+    object_store:
+      enabled: false
+    artifacts: 
+      enabled: false
+    lfs: 
+      enabled: false
+    uploads: 
+      enabled: false
+    packages:
+      enabled: false
+  # ingress:
+  #   configureCertmanager: false
+postgresql:
+  install: true
+redis:
+  install: true
+gitlab:
+  toolbox:
+    enabled: false
+    backups:
+      objectStorage:
+        config:
+          secret: gitlab-object-storage-s3cmd
+          key: password
+
+registry:
+  enabled: false
+  storage:
+    secret: gitlab-registry-storage
+    key: password
+certmanager-issuer:
+  email: webmaster@example.com
+gitlab-runner:
+  install: false
+prometheus:
+  install: false
