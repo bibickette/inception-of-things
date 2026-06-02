@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app2
+  namespace: app-iot
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: app2
+  template:
+    metadata:
+      labels:
+        app: app2
+    spec:
+      containers:
+        - name: second
+          image: bashofmann/rancher-demo:1.0.0
+          env:
+          - name: COW_COLOR
+            value: purple
+        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app2-service
+  namespace: app-iot
+spec:
+  selector:
+    app: app2
+  ports:
+  - protocol: TCP
+    port: 4242
+    targetPort: 8080
