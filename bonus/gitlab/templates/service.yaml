@@ -3,7 +3,7 @@ kind: Service
 metadata: 
   name: {{ .Chart.Name }}
   labels:
-    {{- include "test.labels" . | nindent 4 }}
+    {{- include "gitlab.labels" . | nindent 4 }}
   namespace: {{ .Release.Namespace }}
 spec:
   type: {{ .Values.service.type }}
@@ -11,4 +11,4 @@ spec:
     - port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.port }}
   selector:
-    {{- include "test.selectorLabels" . | nindent 4 }}
+    {{- include "gitlab.selectorLabels" . | nindent 4 }}
