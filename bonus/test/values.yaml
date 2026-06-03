@@ -1,0 +1,13 @@
+replicaCount: 1 
+# nombre de replica de l'app
+
+image: 
+  repository: gitlab/gitlab-ce
+  # This sets the pull policy for images.
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+service:
+  type: ClusterIP
+  port: 80
