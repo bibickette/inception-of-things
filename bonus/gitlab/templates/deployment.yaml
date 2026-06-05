@@ -33,4 +33,17 @@ spec:
               - --fail-with-body
             periodSeconds: 5
             failureThreshold: 60
+          {{- if .Values.persistence.enabled }}
+          volumeMounts:
+          - name: gitlab-data
+            mountPath: {{ .Values.persistence.mountPath }}
+          {{- end }}
+
+      {{- if .Values.persistence.enabled }}
+      volumes:
+      - name: gitlab-data
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.existingClaim }}
+      {{- end }}
+
       

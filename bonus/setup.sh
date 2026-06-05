@@ -1,8 +1,13 @@
 #!/bin/sh
 
-echo "======== DELETING NAMESPACE IF EXISTS ========"
+echo "======== DELETING CLUSTER & NAMESPACE ========"
 helm uninstall -n gitlab gitlab
 kubectl delete namespace gitlab
+k3d cluster delete lab
+
+echo "======== CREATING K3D Cluster ========"
+k3d cluster create lab --port '8888:80@loadbalancer' --port '8080:443@loadbalancer' --volume /mnt/gitlab-data:/mnt/gitlab-data
+
 
 echo "======== INSTALLING GITLAB ... ========"
 

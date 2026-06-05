@@ -11,3 +11,11 @@ image:
 service:
   type: ClusterIP
   port: 80
+
+persistence:
+  enabled: true
+  existingClaim: "gitlab-pvc"
+  mountPath: "/home/git/repositories"
+  hostMountPath: "/mnt/gitlab-data"
+  size: 2Gi
+
