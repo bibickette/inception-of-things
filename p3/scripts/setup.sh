@@ -4,7 +4,7 @@ echo "======== DELETING NAMESPACE AND CLUSTER IF EXIST ========"
 k3d cluster delete wil-app
 kubectl delete namespace argocd
 
-k3d cluster create wil-app --port '8888:80@loadbalancer' --port '8080:443@loadbalancer' 
+k3d cluster create wil-app --port '8888:80@loadbalancer' --port '8080:443@loadbalancer'
 
 kubectl create namespace argocd
 kubectl apply -n argocd --server-side --force-conflicts -f /home/iot/inception-of-things/p3/configs/install.yml
