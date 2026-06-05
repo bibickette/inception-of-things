@@ -24,4 +24,13 @@ spec:
           - name: GITLAB_OMNIBUS_CONFIG
             value: |
               nginx['listen_https'] = false
+              nginx['listen_adresses'] = ['0.0.0.0']
+          startupProbe:
+            exec:
+              command:
+              - curl
+              - localhost/-/health
+              - --fail-with-body
+            periodSeconds: 5
+            failureThreshold: 60
       
