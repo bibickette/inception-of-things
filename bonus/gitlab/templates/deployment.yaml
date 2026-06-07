@@ -32,7 +32,7 @@ spec:
               - localhost/-/health
               - --fail-with-body
             periodSeconds: 5
-            failureThreshold: 60
+            failureThreshold: 90
           {{- if .Values.persistence.enabled }}
           volumeMounts:
           - name: gitlab-data

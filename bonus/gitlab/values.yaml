@@ -17,7 +17,7 @@ persistence:
   existingClaim: "gitlab-pvc"
   mountPath: "/var/opt/gitlab/git-data"
   hostMountPath: "/mnt/gitlab-data"
-  size: 4Gi
+  size: 2Gi
   half_size: 2Gi
   existingDataClaim: "postgresql-pvc"
   mountDataPath: "/var/opt/gitlab/postgresql/data/"

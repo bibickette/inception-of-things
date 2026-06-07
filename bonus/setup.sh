@@ -6,7 +6,9 @@ kubectl delete namespace gitlab
 k3d cluster delete lab
 
 echo "======== CREATING K3D Cluster ========"
-k3d cluster create lab --port '8888:80@loadbalancer' --port '8080:443@loadbalancer' --volume /mnt/gitlab-data:/mnt/gitlab-data --volume /mnt/postgresql-data:/mnt/postgresql-data
+k3d cluster create lab --port '8888:80@loadbalancer' --port '8080:443@loadbalancer' \
+    --volume /mnt/gitlab-data:/mnt/gitlab-data \
+    --volume /mnt/postgresql-data:/mnt/postgresql-data
 
 
 echo "======== INSTALLING GITLAB ... ========"

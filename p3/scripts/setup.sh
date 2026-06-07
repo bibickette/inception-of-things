@@ -1,8 +1,8 @@
 #!/bin/sh
 
 echo "======== DELETING NAMESPACE AND CLUSTER IF EXIST ========"
-k3d cluster delete wil-app
 kubectl delete namespace argocd
+k3d cluster delete wil-app
 
 k3d cluster create wil-app --port '8888:80@loadbalancer' --port '8080:443@loadbalancer'
 
