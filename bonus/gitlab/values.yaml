@@ -18,7 +18,6 @@ persistence:
   mountPath: "/var/opt/gitlab/git-data"
   hostMountPath: "/mnt/gitlab-data"
   size: 2Gi
-  half_size: 2Gi
   existingDataClaim: "postgresql-pvc"
   mountDataPath: "/var/opt/gitlab/postgresql/data/"
   hostMountDataPath: "/mnt/postgresql-data"
