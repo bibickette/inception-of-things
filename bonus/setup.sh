@@ -21,6 +21,7 @@ kubectl wait --for=condition=available deployment \
   --timeout=200s
 
 kubectl apply -f /home/iot/inception-of-things/bonus/configs/ingress.yml
+kubectl apply -f /home/iot/inception-of-things/bonus/configs/secret_gitlab.yml
 kubectl apply -f /home/iot/inception-of-things/bonus/configs/manifest_wil.yml
 
 echo "Password for argocd.localhost is in pass_argocd.key"
