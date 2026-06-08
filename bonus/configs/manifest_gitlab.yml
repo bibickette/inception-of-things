@@ -1,22 +1,19 @@
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: gitlab-app
-#   namespace: argocd
-# spec:
-#   destination:
-#     namespace: gitlab
-#     server: https://kubernetes.default.svc
-#   source:
-#     path: .
-#     repoURL: http://gitlab-67d87d6d4d-2ndfd/root/test.git
-#     targetRevision: HEAD
-#   sources: []
-#   project: default
-#   syncPolicy:
-#     automated:
-#       prune: true
-#       selfHeal: true
-#       enabled: true
-#     syncOptions:
-#       - CreateNamespace=true
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: test
+spec:
+  destination:
+    namespace: test
+    server: https://kubernetes.default.svc
+  source:
+    path: .
+    repoURL: http://gitlab.gitlab.svc.cluster.local/root/test.git
+    targetRevision: HEAD
+  sources: []
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      enabled: true
