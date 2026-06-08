@@ -16,7 +16,7 @@ kubectl wait --for=condition=available deployment \
   --timeout=200s
 
 kubectl apply -f /home/iot/inception-of-things/p3/configs/ingress.yml
-kubectl apply -f /home/iot/inception-of-things/p3/configs/manifest.yml
+kubectl apply -f /home/iot/inception-of-things/p3/configs/manifest_wil.yml
 
 echo "Password is : "
 kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath={.data.password} | base64 -d
