@@ -22,18 +22,18 @@ kubectl wait --for=condition=available deployment \
 
 kubectl apply -f /home/iot/inception-of-things/bonus/configs/ingress.yml
 kubectl apply -f /home/iot/inception-of-things/bonus/configs/secret_gitlab.yml
-kubectl apply -f /home/iot/inception-of-things/bonus/configs/manifest_wil.yml
 
-echo "Password for argocd.localhost is in pass_argocd.key"
+echo "======== Password for argocd.localhost is in pass_argocd.key"
 kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath={.data.password} | base64 -d > pass_argocd.key
 
 echo "======== INSTALLING GITLAB ... ========"
 
 helm upgrade --install gitlab ./gitlab --namespace gitlab --create-namespace --wait --timeout 10m
 
+echo "======== Password for gitlab.localhost is in pass_gitlab.key"
 GITLAB_POD_NAME=$(kubectl get pods -n gitlab -l app.kubernetes.io/name=gitlab -o jsonpath={.items[0].metadata.name})
 kubectl exec -n gitlab $GITLAB_POD_NAME -- cat /etc/gitlab/initial_root_password > pass_gitlab.key
 
-# kubectl apply -f /home/iot/inception-of-things/bonus/configs/manifest_gitlab.yml
+kubectl apply -f /home/iot/inception-of-things/bonus/configs/manifest_gitlab.yml
 
 
