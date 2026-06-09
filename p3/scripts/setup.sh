@@ -7,7 +7,7 @@ k3d cluster delete wil-app
 k3d cluster create wil-app --port '8888:80@loadbalancer' --port '8080:443@loadbalancer'
 
 kubectl create namespace argocd
-kubectl apply -n argocd --server-side --force-conflicts -f ../configs/install.yml
+kubectl apply -n argocd --server-side --force-conflicts -f ./configs/install.yml
 
 echo "Waiting for argocd-server to deploy"
 kubectl wait --for=condition=available deployment \
@@ -15,8 +15,8 @@ kubectl wait --for=condition=available deployment \
   -n argocd \
   --timeout=200s
 
-kubectl apply -f ../configs/ingress.yml
-kubectl apply -f ../configs/manifest.yml
+kubectl apply -f ./configs/ingress.yml
+kubectl apply -f ./configs/manifest.yml
 
 echo "Password is : "
 kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath={.data.password} | base64 -d
