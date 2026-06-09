@@ -20,7 +20,7 @@ install() {
 
   echo "======== CREATING ARGOCD namespace and server ========"
   kubectl create namespace "$ARGOCD_NS" || true
-  kubectl apply -n "$ARGOCD_NS" --server-side --force-conflicts -f ./configs/install.yml
+  kubectl apply -n "$ARGOCD_NS" --server-side --force-conflicts -f ./configs/argocd/install.yml
 
   echo "Waiting for argocd-server to deploy"
   kubectl wait --for=condition=available deployment \
@@ -28,13 +28,13 @@ install() {
     -n "$ARGOCD_NS" \
     --timeout=200s
 
-  kubectl apply -f ./configs/ingress.yml
+  kubectl apply -f ./configs/argocd/ingress.yml
 
   echo "======== Password for argocd.localhost is in pass_argocd.key"
   kubectl get secret argocd-initial-admin-secret -n "$ARGOCD_NS" -o jsonpath='{.data.password}' | base64 -d > pass_argocd.key
 
   echo "======== INSTALLING GITLAB ... ========"
-  helm upgrade --install gitlab ./gitlab --namespace "$GITLAB_NS" --create-namespace --wait --timeout 10m
+  helm upgrade --install gitlab ./configs/gitlab --namespace "$GITLAB_NS" --create-namespace --wait --timeout 10m
 
   echo "======== Password for gitlab.localhost is in pass_gitlab.key"
   if [ ! -f "pass_gitlab.key" ]; then
@@ -42,8 +42,8 @@ install() {
     kubectl exec -n "$GITLAB_NS" "$GITLAB_POD_NAME" -- cat /etc/gitlab/initial_root_password > pass_gitlab.key
   fi
 
-  kubectl apply -f ./configs/secret_gitlab.yml
-  kubectl apply -f ./configs/manifest_gitlab.yml
+  kubectl apply -f ./configs/argocd/secret_gitlab.yml
+  kubectl apply -f ./configs/argocd/manifest_gitlab.yml
 }
 
 uninstall() {
@@ -52,9 +52,9 @@ uninstall() {
   kubectl delete namespace "$GITLAB_NS" --ignore-not-found=true
 
   echo "======== DELETING ARGOCD ========"
-  kubectl delete -f ./configs/manifest_gitlab.yml --ignore-not-found=true || true
-  kubectl delete -f ./configs/secret_gitlab.yml --ignore-not-found=true || true
-  kubectl delete -f ./configs/ingress.yml --ignore-not-found=true || true
+  kubectl delete -f ./configs/argocd/manifest_gitlab.yml --ignore-not-found=true || true
+  kubectl delete -f ./configs/argocd/secret_gitlab.yml --ignore-not-found=true || true
+  kubectl delete -f ./configs/argocd/ingress.yml --ignore-not-found=true || true
   kubectl delete namespace "$ARGOCD_NS" --ignore-not-found=true
 
   echo "======== DELETING CLUSTER ========"
@@ -72,7 +72,7 @@ case "${1:-}" in
   install) install ;;
   uninstall) uninstall ;;
   reinstall) uninstall; install ;;
-  recreate) prune; uninstall; install ;;
+  recreate) prune; install ;;
   prune) prune ;;
   *)
     echo "Usage: $0 {install|uninstall|reinstall|recreate|prune}"

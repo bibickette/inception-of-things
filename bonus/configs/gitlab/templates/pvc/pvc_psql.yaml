@@ -8,19 +8,19 @@ metadata:
 spec:
   storageClassName: shared-storage
   capacity: 
-    storage: {{ .Values.persistence.size }}
+    storage: {{ .Values.persistence.pvSize }}
   accessModes:
     - ReadWriteMany
   volumeMode: Filesystem
   hostPath:
-    path: {{ .Values.persistence.hostMountDataPath }}
+    path: {{ .Values.persistence.hostMountPathPsql }}
 
 ---
 
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Values.persistence.existingDataClaim }}
+  name: {{ .Values.persistence.existingClaimPsql }}
   namespace: {{ .Release.Namespace }}
 spec:
   storageClassName: shared-storage
@@ -31,4 +31,4 @@ spec:
         type: volume-psql
   resources:
     requests:
-      storage: {{ .Values.persistence.size }}
+      storage: {{ .Values.persistence.pvSize }}

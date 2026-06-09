@@ -1,0 +1,30 @@
+replicaCount: 1 
+# nombre de replica de l'app
+
+image: 
+  repository: gitlab/gitlab-ce
+  # This sets the pull policy for images.
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+service:
+  type: ClusterIP
+  port: 80
+
+persistence:
+  enabled: true
+  pvSize: 2Gi
+  # Gitlab volume
+  existingClaimGitlab: "gitlab-pvc"
+  mountPathGiltab: "/var/opt/gitlab/git-data"
+  hostMountPathGitlab: "/mnt/gitlab-data"
+  # Gitlab key volume
+  existingClaimGitlabKey: "gitlab-key-pvc"
+  mountPathGitlabKey: "/etc/gitlab/"
+  hostMountPathGitlabKey: "/mnt/gitlab-key"
+  # Postgresql volume
+  existingClaimPsql: "postgresql-pvc"
+  mountPathPsql: "/var/opt/gitlab/postgresql/data/"
+  hostMountPathPsql: "/mnt/postgresql-data"
+
