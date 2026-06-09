@@ -6,6 +6,7 @@ GITLAB_NS="gitlab"
 ARGOCD_NS="argocd"
 
 GITLAB_DATA="/mnt/gitlab-data"
+GITLAB_KEY="/mnt/gitlab-key"
 POSTGRES_DATA="/mnt/postgresql-data"
 
 install() {
@@ -14,6 +15,7 @@ install() {
     --port '8888:80@loadbalancer' \
     --port '8080:443@loadbalancer' \
     --volume ${GITLAB_DATA}:/mnt/gitlab-data \
+    --volume ${GITLAB_KEY}:/mnt/gitlab-key \
     --volume ${POSTGRES_DATA}:/mnt/postgresql-data
 
   echo "======== CREATING ARGOCD namespace and server ========"
@@ -27,7 +29,6 @@ install() {
     --timeout=200s
 
   kubectl apply -f ./configs/ingress.yml
-  kubectl apply -f ./configs/secret_gitlab.yml
 
   echo "======== Password for argocd.localhost is in pass_argocd.key"
   kubectl get secret argocd-initial-admin-secret -n "$ARGOCD_NS" -o jsonpath='{.data.password}' | base64 -d > pass_argocd.key
@@ -41,6 +42,7 @@ install() {
     kubectl exec -n "$GITLAB_NS" "$GITLAB_POD_NAME" -- cat /etc/gitlab/initial_root_password > pass_gitlab.key
   fi
 
+  kubectl apply -f ./configs/secret_gitlab.yml
   kubectl apply -f ./configs/manifest_gitlab.yml
 }
 
@@ -62,7 +64,7 @@ uninstall() {
 prune() {
   uninstall
   echo "======== DELETING DATA VOLUMES ========"
-  sudo rm -rf "$GITLAB_DATA" "$POSTGRES_DATA"
+  sudo rm -rf "$GITLAB_DATA" "$POSTGRES_DATA" "$GITLAB_KEY"
   rm pass_*.key
 }
 
@@ -70,9 +72,10 @@ case "${1:-}" in
   install) install ;;
   uninstall) uninstall ;;
   reinstall) uninstall; install ;;
+  recreate) prune; uninstall; install ;;
   prune) prune ;;
   *)
-    echo "Usage: $0 {install|uninstall|reinstall|prune}"
+    echo "Usage: $0 {install|uninstall|reinstall|recreate|prune}"
     exit 1
     ;;
 esac

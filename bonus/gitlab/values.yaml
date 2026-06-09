@@ -21,4 +21,7 @@ persistence:
   existingDataClaim: "postgresql-pvc"
   mountDataPath: "/var/opt/gitlab/postgresql/data/"
   hostMountDataPath: "/mnt/postgresql-data"
+  existingKeyClaim: "gitlab-key-pvc"
+  mountKeyPath: "/etc/gitlab/"
+  hostMountKeyPath: "/mnt/gitlab-key"
 

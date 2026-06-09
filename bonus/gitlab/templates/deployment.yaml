@@ -37,6 +37,8 @@ spec:
           volumeMounts:
           - name: gitlab-data
             mountPath: {{ .Values.persistence.mountPath }}
+          - name: gitlab-key
+            mountPath: {{ .Values.persistence.mountKeyPath }}
           - name: postgresql-data
             mountPath: {{ .Values.persistence.mountDataPath }}
           {{- end }}
@@ -46,6 +48,9 @@ spec:
       - name: gitlab-data
         persistentVolumeClaim:
           claimName: {{ .Values.persistence.existingClaim }}
+      - name: gitlab-key
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.existingKeyClaim }}
       - name: postgresql-data
         persistentVolumeClaim:
           claimName: {{ .Values.persistence.existingDataClaim }}
