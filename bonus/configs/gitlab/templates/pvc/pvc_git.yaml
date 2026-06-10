@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: shared-volume-git
+  labels:
+    type: volume-git
+spec:
+  storageClassName: shared-storage
+  capacity: 
+    storage: {{ .Values.persistence.pvSize }}
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  hostPath:
+    path: {{ .Values.persistence.hostMountPathGitlab }}
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.persistence.existingClaimGitlab }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  storageClassName: shared-storage
+  accessModes:
+    - ReadWriteMany
+  selector:
+    matchLabels:
+        type: volume-git
+  resources:
+    requests:
+      storage: {{ .Values.persistence.pvSize }}
+
