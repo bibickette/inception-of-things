@@ -36,7 +36,7 @@ spec:
           {{- if .Values.persistence.enabled }}
           volumeMounts:
           - name: gitlab-data
-            mountPath: {{ .Values.persistence.mountPathGiltab }}
+            mountPath: {{ .Values.persistence.mountPathGitlab }}
           - name: gitlab-key
             mountPath: {{ .Values.persistence.mountPathGitlabKey }}
           - name: postgresql-data

@@ -1,8 +1,8 @@
 # Project presentation - `inception-of-things`
 **Introduction**
 
-*This project was realized in a **trio with [Luma](https://github.com/luma-3) and [Sensei Tarzan](https://github.com/SenseiTarzan)***  
-*It also uses this [Git repository](https://github.com/bibickette/inception-of-things-gcaptari)*
+*This project was realized in a **trio with [Luma](https://github.com/luma-3) and [Sensei Tarzan](https://github.com/SenseiTarzan)***.  
+*It also uses this [Git repository](https://github.com/bibickette/inception-of-things-gcaptari)*.
 
 This README is organized as follows:
 - [Description](#description)
@@ -76,7 +76,26 @@ inception-of-things/
 │       └── manifest.yml
 │
 └── bonus/                      ← Bonus: GitLab running locally in the cluster
-==========    *TO UPDATE*
+    ├── configs
+    │   ├── argocd
+    │   │   ├── ingress.yml
+    │   │   ├── install.yml
+    │   │   ├── manifest_gitlab.yml
+    │   │   └── secret_gitlab.yml
+    │   └── gitlab
+    │       ├── Chart.yml
+    │       ├── templates
+    │       │   ├── deployment.yml
+    │       │   ├── _helpers.tpl
+    │       │   ├── ingress.yml
+    │       │   ├── pvc
+    │       │   │   ├── pvc_git_key.yml
+    │       │   │   ├── pvc_git.yml
+    │       │   │   └── pvc_psql.yml
+    │       │   └── service.yml
+    │       └── values.yml
+    └── scripts
+        └── setup.sh
 ```
  
 * * *
@@ -96,13 +115,9 @@ inception-of-things/
 - **K3d** : Tool that runs K3s clusters inside Docker containers
 - **kubectl** : Official K8s command-line tool. Used to interact with any K8s cluster
 - **Argo CD** : GitOps continuous delivery tool for Kubernetes. Monitors a Git repository and automatically synchronizes the cluster with its contents.
+- **Helm** : Package manager for Kubernetes (used in bonus). Helm *charts* are pre-packaged application definitions that simplify complex deployments like GitLab.
+-  **GitLab CE** : Self-hosted Git repository platform (bonus). Replaces GitHub as the source of truth monitored by Argo CD, running entirely within the local cluster.
 
- ========== to be coming ? :
-| Technology | Role |
-|---|---|
-| **Helm** | Package manager for Kubernetes (used in bonus). Helm *charts* are pre-packaged application definitions that simplify complex deployments like GitLab. |
-| **GitLab CE** | Self-hosted Git repository platform (bonus). Replaces GitHub as the source of truth monitored by Argo CD, running entirely within the local cluster. |
- 
 * * *
  
 ## Key Concepts
@@ -131,7 +146,7 @@ The host virtual machine is built from a **Debian 13 Trixie** disk image and run
  
 ```bash
 qemu-system-x86_64 \
-  -m 8192 \                        # 8 GB RAM
+  -m 10240 \                       # 10 GB RAM
   -cpu host \                      # exposes host CPU features to the guest
   -enable-kvm \                    # enables hardware-accelerated virtualization
   -smp 4 \                         # 4 virtual CPU cores
@@ -191,6 +206,37 @@ The GitOps workflow:
    => Pulls the new image from Docker Hub
    => Redeploys the pod automatically.
 4. The application is still reachable at `http://localhost:8888` and now shows v2.
+
+
+### bonus : GitLab CE, K3d and Argo CD
+
+The bonus extends Part 3 by replacing GitHub with a **self-hosted GitLab CE instance**
+running entirely inside the cluster. Argo CD now monitors this local GitLab instead of
+an external service, making the entire pipeline 100% autonomous and internet-independent.
+
+Three Kubernetes namespaces are created:
+- **argocd** : runs Argo CD, which monitors the local GitLab repository
+- **dev** : hosts the `wil42/playground` application deployed and managed by Argo CD
+- **gitlab** : hosts the full GitLab CE instance, installed via **Helm**
+
+**Persistent Volumes** are used to survive cluster deletions and rebuilds. Three
+critical data paths are persisted on the host VM disk:
+- **Git repositories** : all projects and their commit history
+- **Database** : users, projects metadata, deploy keys and tokens (PostgreSQL)
+
+This means that after a full `k3d cluster delete` and reinstall, GitLab comes back
+with all repositories, users, deploy keys and Argo CD tokens intact : no manual
+reconfiguration needed.
+
+The GitOps workflow is identical to Part 3, but fully local:
+1. The application is reachable at `http://localhost:8888` and shows v1.
+2. Edit the manifest on the **local GitLab** instance (changing `:v1` to `:v2`)
+3. Argo CD detects the change
+   => Pulls the new image from Docker Hub
+   => Redeploys the pod automatically.
+4. The application is still reachable at `http://localhost:8888` and now shows v2.
+
+
  
 * * *
  
@@ -289,12 +335,7 @@ kubectl get application -n argocd
 kubectl describe application <app-name> -n argocd
 ```
 
-========== to see :
-```
-# Force a sync (if argocd CLI is installed)
-argocd app sync <app-name>
-```
- 
+
 ### Debugging
 ```bash
 kubectl describe pod <pod-name> -n <namespace>   # events and error messages
@@ -352,13 +393,37 @@ kubectl get ns          # argocd and dev should be present
 # Check the app
 curl http://localhost:8888/    # {"status":"ok", "message": "v1"}
  
-# Access Argo CD web UI if not opened in the cluster
+# Access Argo CD web UI if not opened in the cluster, but in our case it is
 kubectl port-forward svc/argocd-server -n argocd 8080:443
 # open https://localhost:8080 in your browser
 ```
  
 To trigger a redeployment, update `image: wil42/playground:v1` to `:v2` in your GitHub repository. Argo CD will detect the change and redeploy automatically within a few minutes.
- 
+
+#### Bonus: GitLab CE, K3d and Argo CD
+
+> ⚠️ If you ran Part 3 before, delete its cluster first:
+> ```bash
+> k3d cluster delete wil-app
+> ```
+
+```bash
+cd bonus
+bash scripts/setup.sh   # installs Docker, K3d, GitLab CE via Helm,
+                         # Argo CD, and deploys everything
+
+# Check all three namespaces are present
+kubectl get ns          # argocd, dev and gitlab should appear
+
+# Check the app
+curl http://localhost:8888/    # {"status":"ok", "message": "v1"}
+```
+
+Persistent volumes are stored on the host VM under `/mnt/`. If you delete and
+recreate the cluster, your GitLab data (repositories, users, deploy keys) will
+be automatically restored on the next `bash scripts/setup.sh`.
+
+
 * * *
  
-*Project validation date: TBD*
+*Project validation date: June 8, 2026*
