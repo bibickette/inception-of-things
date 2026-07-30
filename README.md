@@ -219,7 +219,7 @@ Three Kubernetes namespaces are created:
 - **dev** : hosts the `wil42/playground` application deployed and managed by Argo CD
 - **gitlab** : hosts the full GitLab CE instance, installed via **Helm**
 
-**Persistent Volumes** are used to survive cluster deletions and rebuilds. Three
+**Persistent Volumes** are used to survive cluster deletions and rebuilds. Two
 critical data paths are persisted on the host VM disk:
 - **Git repositories** : all projects and their commit history
 - **Database** : users, projects metadata, deploy keys and tokens (PostgreSQL)
